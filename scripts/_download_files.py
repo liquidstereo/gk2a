@@ -4,6 +4,11 @@ from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from alive_progress import alive_bar
 from typing import List, Dict, Any, Tuple
+import warnings
+
+from PIL import Image
+Image.MAX_IMAGE_PIXELS = None
+warnings.filterwarnings("ignore", ".*DecompressionBombWarning.*")
 
 try:
     import pandas as pd

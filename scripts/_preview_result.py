@@ -52,7 +52,7 @@ def insert_text(image: np.ndarray, text: str,
 
 
 
-def resize_image(image: np.ndarray, width: Optional[int] = None, height: Optional[int] = None) -> np.ndarray:
+def resize_image(image: np.ndarray, width: int=0, height: int=0) -> np.ndarray:
 
     if width is None and height is None:
         return image
@@ -259,7 +259,6 @@ class ImagePreviewer:
 
 
 
-
     def _start_loading_indicator(self) -> None:
 
         if self.blink_thread is None or not self.blink_thread.is_alive():
@@ -273,7 +272,6 @@ class ImagePreviewer:
             )
             self.blink_thread.daemon = True
             self.blink_thread.start()
-            # time.sleep(0.05)  # ← 핵심 추가: Blink 출력 여유 시간 확보
 
 
 
@@ -315,7 +313,8 @@ class ImagePreviewer:
 # Main Function
 # =========================================================================== #
 
-def preview_result(data: List[Dict[str, Any]], success_count: int, resize: bool = True) -> None:
+def preview_result(data: List[Dict[str, Any]], success_count: int,
+                   resize: bool = True) -> None | bool:
 
     if success_count <= 0:
         Msg.Error(f'NO VALID AND LOADABLE IMAGES FOUND.')

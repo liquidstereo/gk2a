@@ -103,8 +103,9 @@ class ImagePreviewer:
         self.stop_event = threading.Event()
         self.blink_thread = None
         self.play_msg = ''
-        self.last_frame_time = time.time()  # FPS 계산용
-        self.current_fps = 30.0  # 현재 FPS
+        self.last_frame_time = time.time()
+        self.current_fps = 30.0
+        self.window_positioned = False  # WINDOWS POSITION FLAG
         self._setup_key_codes()
 
     def _setup_key_codes(self):
@@ -195,7 +196,6 @@ class ImagePreviewer:
                 win_title = title
             # *** WINDOW.TITLE *** #
 
-
             # *** RESIZE *** #
             if self.resize:
                 img_display = resize_image(img_display, width=int(w * RESIZE_VALUE))
@@ -218,18 +218,18 @@ class ImagePreviewer:
             # *** FPS / STAND-BY *** #
 
             # *** INSERT.TEXT *** #
-            channel = self.channel.upper()
-            insert_text(img_display, f'{self.current_index:04d}/{len(self.image_paths) - 1:04d}', index=1)   # ← insert text ()
-            insert_text(img_display, f'{info["display_data"]}', index=0)                                # ← insert text ()
-            insert_text(img_display, f'{self.current_fps:.1f} FPS', index=0, align='right')           # ← FPS 표시 (오른쪽 정렬)
+            insert_text(img_display, f'{self.current_index:04d}/{len(self.image_paths) - 1:04d}', index=1)
+            insert_text(img_display, f'{info["display_data"]}', index=0)
+            insert_text(img_display, f'{self.current_fps:.1f} FPS', index=0, align='right')
             # *** INSERT.TEXT *** #
 
             cv2.imshow(win_title, img_display)
 
             # *** WINDOW.POSITION *** #
-            # cv2.moveWindow(win_title, 2550, 280)
+            if not self.window_positioned:
+                cv2.moveWindow(win_title, 700, 300)    # ← SET WINDOW POSITION
+                self.window_positioned = True
             # *** WINDOW.POSITION *** #
-
 
             key = cv2.waitKey(wait_time) & 0xFF
 

@@ -108,12 +108,14 @@ class ImagePreviewer:
         self.window_positioned = False  # WINDOWS POSITION FLAG
         self._setup_key_codes()
 
+
     def _setup_key_codes(self):
 
         if platform.system() == 'Darwin':  # macOS
             self.arrow_keys = {'up': 63232, 'down': 63233, 'left': 63234, 'right': 63235}
         else:  # Linux/Windows
             self.arrow_keys = {'up': (82, 0), 'down': (84, 1), 'left': (81, 2), 'right': (83, 3)}
+
 
     def _prepare_images(self) -> bool:
 
@@ -188,20 +190,20 @@ class ImagePreviewer:
             img_display = img.copy()
             h, w = img_display.shape[:2]
 
-            # *** WINDOW.TITLE *** #
+            # ⎾ WINDOW.TITLE ⏋#
             title = f'{self.title.upper()} ({w}px, {h}px)'
             try:
                 win_title = title.encode('utf-8').decode(sys.getfilesystemencoding())
             except (UnicodeEncodeError, UnicodeDecodeError):
                 win_title = title
-            # *** WINDOW.TITLE *** #
+            # ⎿ WINDOW.TITLE ⏌ #
 
-            # *** RESIZE *** #
+            # ⎾ RESIZE ⏋ #
             if self.resize:
                 img_display = resize_image(img_display, width=int(w * RESIZE_VALUE))
-            # *** RESIZE *** #
+            # ⎿ RESIZE ⏌ #
 
-            # *** FPS / STAND-BY *** #
+            # ⎾ FPS / STAND-BY ⏋ #
             if not self.paused:
                 current_time = time.time()
                 if hasattr(self, 'last_frame_time'):
@@ -215,21 +217,21 @@ class ImagePreviewer:
                 wait_time = max(1, int((target_frame_time - processing_time) * 1000))
             else:
                 wait_time = 0
-            # *** FPS / STAND-BY *** #
+            # ⎿  FPS / STAND-BY ⏌ #
 
-            # *** INSERT.TEXT *** #
+            # ⎾ INSERT.TEXT ⏋ #
             insert_text(img_display, f'{self.current_index:04d}/{len(self.image_paths) - 1:04d}', index=1)
             insert_text(img_display, f'{info["display_data"]}', index=0)
             insert_text(img_display, f'{self.current_fps:.1f} FPS', index=0, align='right')
-            # *** INSERT.TEXT *** #
+            # ⎿ INSERT.TEXT ⏌ #
 
             cv2.imshow(win_title, img_display)
 
-            # *** WINDOW.POSITION *** #
+            # ⎾ WINDOW.POSITION ⏋ #
             if not self.window_positioned:
                 cv2.moveWindow(win_title, 700, 300)    # ← SET WINDOW POSITION
                 self.window_positioned = True
-            # *** WINDOW.POSITION *** #
+            # ⎿ WINDOW.POSITION ⏌ #
 
             key = cv2.waitKey(wait_time) & 0xFF
 
@@ -239,7 +241,7 @@ class ImagePreviewer:
 
     def _handle_input(self, key: int) -> bool:
 
-        if key == 27: # ESC: Exit Preview
+        if key == 27:   # ESC: Exit Preview
             return True
         elif key == 32: # Space: Pause/Play Toggle
             self.paused = not self.paused
@@ -258,7 +260,6 @@ class ImagePreviewer:
         return False
 
 
-
     def _start_loading_indicator(self) -> None:
 
         if self.blink_thread is None or not self.blink_thread.is_alive():
@@ -274,13 +275,11 @@ class ImagePreviewer:
             self.blink_thread.start()
 
 
-
     def _stop_loading_indicator(self) -> None:
 
         if self.blink_thread is not None and self.blink_thread.is_alive():
             self.stop_event.set()
             self.blink_thread.join(timeout=0.2)
-
 
 
     def _get_cached_image(self, image_path: str) -> Optional[np.ndarray]:
@@ -300,6 +299,7 @@ class ImagePreviewer:
 
         return img
 
+
     def _clear_msg(self, message: str):
 
         num_lines = message.count('\n')
@@ -310,7 +310,7 @@ class ImagePreviewer:
         sys.stdout.flush()
 
 # =========================================================================== #
-# Main Function
+# Main Function                                                               #
 # =========================================================================== #
 
 def preview_result(data: List[Dict[str, Any]], success_count: int,
